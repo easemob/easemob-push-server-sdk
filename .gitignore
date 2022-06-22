@@ -1,0 +1,10 @@
+/push-sdk-core/src/test/
+
+.DS_Store
+target
+
+.idea
+
+*reduced-pom.xml
+
+
