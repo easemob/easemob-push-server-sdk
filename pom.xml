@@ -17,6 +17,7 @@
 
     <modules>
         <module>push-sdk-core</module>
+        <module>push-sdk-common</module>
     </modules>
 
     <properties>
