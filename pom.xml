@@ -18,6 +18,7 @@
     <modules>
         <module>push-sdk-core</module>
         <module>push-sdk-common</module>
+        <module>jiguang-sdk-core</module>
     </modules>
 
     <properties>
