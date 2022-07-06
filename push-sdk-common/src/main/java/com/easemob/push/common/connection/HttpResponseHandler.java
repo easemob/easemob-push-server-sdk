@@ -5,7 +5,7 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.ResponseWrapper;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

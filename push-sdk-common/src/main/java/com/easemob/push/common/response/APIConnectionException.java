@@ -1,4 +1,4 @@
-package com.easemob.push.common.resp;
+package com.easemob.push.common.response;
 
 /**
  * Should retry for encountering this exception basically.

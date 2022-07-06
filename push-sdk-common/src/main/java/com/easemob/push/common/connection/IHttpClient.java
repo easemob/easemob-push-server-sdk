@@ -1,8 +1,8 @@
 package com.easemob.push.common.connection;
 
-import com.easemob.push.common.resp.APIConnectionException;
-import com.easemob.push.common.resp.APIRequestException;
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.APIConnectionException;
+import com.easemob.push.common.response.APIRequestException;
+import com.easemob.push.common.response.ResponseWrapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,10 +32,10 @@ public interface IHttpClient {
             + "It may be due to slowly response from EPush server, or unstable connection. \n"
             + "If the problem persists, please let us know at support@easemob.com.";
     public static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    /* 设置连接超时时间 */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = (5 * 1000); // milliseconds
-    /* 设置读取超时时间 */
-    public static final int DEFAULT_READ_TIMEOUT = (30 * 1000); // milliseconds
+    /* 设置连接超时时间  milliseconds */
+    public static final int DEFAULT_CONNECTION_TIMEOUT = (5 * 1000);
+    /* 设置读取超时时间 milliseconds */
+    public static final int DEFAULT_READ_TIMEOUT = (30 * 1000);
     public static final int DEFAULT_MAX_RETRY_TIMES = 3;
 
     public ResponseWrapper sendGet(String url)

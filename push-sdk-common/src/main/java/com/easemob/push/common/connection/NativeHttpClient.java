@@ -32,9 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.easemob.push.common.ClientConfig;
-import com.easemob.push.common.resp.APIConnectionException;
-import com.easemob.push.common.resp.APIRequestException;
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.APIConnectionException;
+import com.easemob.push.common.response.APIRequestException;
+import com.easemob.push.common.response.ResponseWrapper;
 import com.easemob.push.common.utils.StringUtils;
 
 /**
@@ -120,13 +120,14 @@ public class NativeHttpClient implements IHttpClient {
                 break;
             } catch (SocketTimeoutException e) {
                 if (KEYWORDS_READ_TIMED_OUT.equals(e.getMessage())) {
-                    // Read timed out.  For push, maybe should not re-send.
+                    /* Read timed out.  For push, maybe should not re-send. */
                     throw new APIConnectionException(READ_TIMED_OUT_MESSAGE, e, true);
-                } else {    // connect timed out
+                } else {
+                    /* connect timed out */
                     if (retryTimes >= maxRetryTimes) {
                         throw new APIConnectionException(CONNECT_TIMED_OUT_MESSAGE, e, retryTimes);
                     } else {
-                        log.debug("connect timed out - retry again - " + (retryTimes + 1));
+                        log.debug("connect timed out - retry again - {}" ,retryTimes + 1);
                     }
                 }
             }
@@ -138,9 +139,9 @@ public class NativeHttpClient implements IHttpClient {
             RequestMethod method) throws APIConnectionException, APIRequestException,
             SocketTimeoutException {
 
-        log.debug("Send request - " + method.toString() + " " + url);
+        log.debug("Send request - {} {} ", method.toString(), url);
         if (null != content) {
-            log.debug("Request Content - " + content);
+            log.debug("Request Content - {}", content);
         }
         HttpURLConnection conn = null;
         OutputStream out = null;
@@ -205,16 +206,16 @@ public class NativeHttpClient implements IHttpClient {
             wrapper.setRateLimit(quota, remaining, reset);
 
             if (status >= 200 && status < 300) {
-                log.debug("Succeed to get response OK - responseCode:" + status);
-                log.debug("Response Content - " + responseContent);
+                log.debug("Succeed to get response OK - responseCode: {}", status);
+                log.debug("Response Content - {}", responseContent);
 
             } else if (status >= 300 && status < 400) {
-                log.warn("Normal response but unexpected - responseCode:" + status
-                        + ", responseContent:" + responseContent);
+                log.warn("Normal response but unexpected - responseCode: {}, responseContent: {}",
+                        status, responseContent);
 
             } else {
-                log.warn("Got error response - responseCode:" + status + ", responseContent:"
-                        + responseContent);
+                log.warn("Got error response - responseCode: {}, responseContent: {}",
+                        status, responseContent);
 
                 switch (status) {
                     case 400:
@@ -357,8 +358,8 @@ public class NativeHttpClient implements IHttpClient {
                         continue;
                     }
                     strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
-                    strBuf.append(
-                            "Content-Disposition: form-data; name=\"" + inputName + "\"\r\n\r\n");
+                    strBuf.append("Content-Disposition: form-data; name=\"").append(inputName)
+                            .append("\"\r\n\r\n");
                     strBuf.append(inputValue);
                 }
                 out.write(strBuf.toString().getBytes());

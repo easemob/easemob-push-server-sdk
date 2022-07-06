@@ -1,15 +1,8 @@
 package com.easemob.push.common.connection;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.net.URI;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
@@ -24,7 +17,6 @@ import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -38,8 +30,6 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -50,9 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.easemob.push.common.ClientConfig;
-import com.easemob.push.common.resp.APIConnectionException;
-import com.easemob.push.common.resp.APIRequestException;
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.APIConnectionException;
+import com.easemob.push.common.response.APIRequestException;
+import com.easemob.push.common.response.ResponseWrapper;
 import com.easemob.push.common.utils.StringUtils;
 
 /**
@@ -60,22 +50,22 @@ import com.easemob.push.common.utils.StringUtils;
  */
 public class ApacheHttpClient implements IHttpClient {
 
-    private final static Object syncLock = new Object();
-    private static Logger log = LoggerFactory.getLogger(ApacheHttpClient.class);
+    private static final  Object syncLock = new Object();
+    private static final Logger log = LoggerFactory.getLogger(ApacheHttpClient.class);
     private static CloseableHttpClient httpClient = null;
-    private static PoolingHttpClientConnectionManager cm;
+    private PoolingHttpClientConnectionManager connectionManager;
     private final int connectionTimeout;
     private final int connectionRequestTimeout;
     private final int socketTimeout;
     private final int maxRetryTimes;
     private final String encryptType;
-    private String authCode;
+    private final String authCode;
     private HttpHost proxyHttpHost;
-    // 最大连接数
+    /* 最大连接数 */
     private int maxConnectionCount = 200;
-    // 每个路由的最大连接数
+    /* 每个路由的最大连接数 */
     private int maxConnectionPerRoute = 40;
-    // 目标主机的最大连接数
+    /* 目标主机的最大连接数 */
     private int maxRoute = 100;
 
     public ApacheHttpClient(String authCode, HttpProxy proxy, ClientConfig config) {
@@ -165,62 +155,63 @@ public class ApacheHttpClient implements IHttpClient {
 
     public CloseableHttpClient createHttpClient(int maxTotal, int maxPerRoute, int maxRoute,
             String hostname, int port) {
-        ConnectionSocketFactory plainsf = PlainConnectionSocketFactory
+        ConnectionSocketFactory plainConnectionSocketFactory = PlainConnectionSocketFactory
                 .getSocketFactory();
-        LayeredConnectionSocketFactory sslsf = SSLConnectionSocketFactory
+        LayeredConnectionSocketFactory sslConnectionSocketFactory = SSLConnectionSocketFactory
                 .getSocketFactory();
         Registry<ConnectionSocketFactory> registry = RegistryBuilder
-                .<ConnectionSocketFactory>create().register("http", plainsf)
-                .register("https", sslsf).build();
-        cm = new PoolingHttpClientConnectionManager(
-                registry);
-        // 将最大连接数增加
-        cm.setMaxTotal(maxTotal);
-        // 将每个路由基础的连接增加
-        cm.setDefaultMaxPerRoute(maxPerRoute);
+                .<ConnectionSocketFactory>create().register("http", plainConnectionSocketFactory)
+                .register("https", sslConnectionSocketFactory).build();
+        connectionManager = new PoolingHttpClientConnectionManager(registry);
+        /* 将最大连接数增加 */
+        connectionManager.setMaxTotal(maxTotal);
+        /* 将每个路由基础的连接增加 */
+        connectionManager.setDefaultMaxPerRoute(maxPerRoute);
         HttpHost httpHost = new HttpHost(hostname, port);
-        // 将目标主机的最大连接数增加
-        cm.setMaxPerRoute(new HttpRoute(httpHost), maxRoute);
+        /* 将目标主机的最大连接数增加 */
+        connectionManager.setMaxPerRoute(new HttpRoute(httpHost), maxRoute);
 
-        // 请求重试处理
+        /* 请求重试处理 */
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
-            public boolean retryRequest(IOException exception,
+            @Override public boolean retryRequest(IOException exception,
                     int executionCount, HttpContext context) {
                 if (executionCount >= maxRetryTimes) {
                     return false;
                 }
-                if (exception instanceof NoHttpResponseException) {// 如果服务器丢掉了连接，那么就重试
+                /* 如果服务器丢掉了连接，那么就重试 */
+                if (exception instanceof NoHttpResponseException) {
                     return true;
                 }
-                if (exception instanceof SSLHandshakeException) {// 不要重试SSL握手异常
+                /* 不要重试SSL握手异常 */
+                if (exception instanceof SSLHandshakeException) {
                     return false;
                 }
-                if (exception instanceof InterruptedIOException) {// 超时
+                /* 超时 */
+                if (exception instanceof InterruptedIOException) {
                     return false;
                 }
-                if (exception instanceof UnknownHostException) {// 目标服务器不可达
+                /* 目标服务器不可达 */
+                if (exception instanceof UnknownHostException) {
                     return false;
                 }
-                if (exception instanceof ConnectTimeoutException) {// 连接被拒绝
+                /* 连接被拒绝 */
+                if (exception instanceof ConnectTimeoutException) {
                     return false;
                 }
-                if (exception instanceof SSLException) {// SSL握手异常
+                /* SSL握手异常 */
+                if (exception instanceof SSLException) {
                     return false;
                 }
 
-                HttpClientContext clientContext = HttpClientContext
-                        .adapt(context);
+                HttpClientContext clientContext = HttpClientContext.adapt(context);
                 HttpRequest request = clientContext.getRequest();
-                // 如果请求是幂等的，就再次尝试
-                if (!(request instanceof HttpEntityEnclosingRequest)) {
-                    return true;
-                }
-                return false;
+                /* 如果请求是幂等的，就再次尝试 */
+                return !(request instanceof HttpEntityEnclosingRequest);
             }
         };
 
         return HttpClients.custom()
-                .setConnectionManager(cm)
+                .setConnectionManager(connectionManager)
                 .setRetryHandler(httpRequestRetryHandler).build();
 
     }
@@ -377,7 +368,6 @@ public class ApacheHttpClient implements IHttpClient {
     @Override
     public ResponseWrapper sendPut(String url, String content)
             throws APIConnectionException, APIRequestException {
-        //        return doRequest(url, content, RequestMethod.PUT);
         ResponseWrapper wrapper = new ResponseWrapper();
         CloseableHttpResponse response = null;
         HttpPut httpPut = new HttpPut(url);
@@ -408,61 +398,10 @@ public class ApacheHttpClient implements IHttpClient {
         return wrapper;
     }
 
-    public ResponseWrapper uploadFile(String url, String path, String fileType)
-            throws APIConnectionException, APIRequestException {
-        log.info("Upload file: " + url + "filePath：" + path);
-        ResponseWrapper wrapper = new ResponseWrapper();
-        File file = new File(path);
-        if (!file.exists() || file.isDirectory()) {
-            log.error("File not exist!");
-            wrapper.setErrorObject();
-            return wrapper;
-        }
-        String boundary = "---------------------------" + new Date().getTime();
-        CloseableHttpResponse response = null;
-        try {
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader(HttpHeaders.AUTHORIZATION, authCode);
-            FileInputStream fis = new FileInputStream(file);
-            File tempFile =
-                    File.createTempFile(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date()),
-                            null);
-            FileOutputStream fos = new FileOutputStream(tempFile);
-            fos.write((boundary + "\r\n").getBytes());
-            fos.write(
-                    ("Content-Disposition: form-data; name=\"" + fileType + "\"; filename=\"" + file
-                            .getName() + "\"\r\n").getBytes());
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            byte[] buff = new byte[8096];
-            int len = 0;
-            while ((len = bis.read(buff)) != -1) {
-                fos.write(buff, 0, len);
-            }
-            fos.write(("\r\n--" + boundary + "--\r\n").getBytes());
-            FileEntity entity = new FileEntity(tempFile, ContentType.MULTIPART_FORM_DATA);
-            entity.setContentEncoding("UTF-8");
-            httpPost.setEntity(entity);
-            response = getHttpClient(url).execute(httpPost);
-            processResponse(response, wrapper);
-        } catch (IOException e) {
-            log.debug(IO_ERROR_MESSAGE, e);
-            throw new APIConnectionException(READ_TIMED_OUT_MESSAGE, e, true);
-        } finally {
-            try {
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return wrapper;
-    }
-
     public void processResponse(CloseableHttpResponse response, ResponseWrapper wrapper)
             throws APIConnectionException, APIRequestException, IOException {
         HttpEntity entity = response.getEntity();
-        log.debug("Response", response.toString());
+        log.debug("Response {}", response);
         int status = response.getStatusLine().getStatusCode();
         String responseContent = "";
         if (entity != null) {
@@ -478,18 +417,15 @@ public class ApacheHttpClient implements IHttpClient {
         log.debug(wrapper.responseContent);
         EntityUtils.consume(entity);
         if (status >= 200 && status < 300) {
-            log.debug("Succeed to get response OK - responseCode:" + status);
-            log.debug("Response Content - " + responseContent);
-
+            log.debug("Succeed to get response OK - responseCode: {}", status);
+            log.debug("Response Content - {}", responseContent);
         } else if (status >= 300 && status < 400) {
             log.warn(
-                    "Normal response but unexpected - responseCode:" + status + ", responseContent:"
-                            + responseContent);
-
+                    "Normal response but unexpected - responseCode: {} , responseContent: {}",
+                    status, responseContent);
         } else {
-            log.warn("Got error response - responseCode:" + status + ", responseContent:"
-                    + responseContent);
-
+            log.warn("Got error response - responseCode: {} , responseContent: {}",
+                    status, responseContent);
             switch (status) {
                 case 400:
                     log.error(
@@ -538,8 +474,8 @@ public class ApacheHttpClient implements IHttpClient {
             if (httpClient != null) {
                 httpClient.close();
             }
-            if (cm != null) {
-                cm.close();
+            if (connectionManager != null) {
+                connectionManager.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -548,15 +484,3 @@ public class ApacheHttpClient implements IHttpClient {
 }
 
 
-class HttpDeleteWithBody extends HttpEntityEnclosingRequestBase {
-    public static final String METHOD_NAME = "DELETE";
-
-    public HttpDeleteWithBody(final String uri) {
-        super();
-        setURI(URI.create(uri));
-    }
-
-    public String getMethod() {
-        return METHOD_NAME;
-    }
-}

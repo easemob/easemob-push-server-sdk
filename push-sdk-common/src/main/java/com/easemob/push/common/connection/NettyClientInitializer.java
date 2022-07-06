@@ -2,7 +2,7 @@ package com.easemob.push.common.connection;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.ResponseWrapper;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;

@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.easemob.push.common.ClientConfig;
-import com.easemob.push.common.resp.APIConnectionException;
-import com.easemob.push.common.resp.APIRequestException;
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.APIConnectionException;
+import com.easemob.push.common.response.APIRequestException;
+import com.easemob.push.common.response.ResponseWrapper;
 import com.easemob.push.common.utils.StringUtils;
 
 import io.netty.bootstrap.Bootstrap;
@@ -107,8 +107,8 @@ public class NettyHttpClient implements IHttpClient {
         request.headers().set(HttpHeaderNames.AUTHORIZATION, authCode);
         request.headers().set("Content-Type", "application/json;charset=utf-8");
 
-        log.info("Sending request. " + request);
-        log.info("Send body: " + content);
+        log.info("Sending request. {}", request);
+        log.info("Send body: {}", content);
         channel.writeAndFlush(request);
         try {
             channel.closeFuture().sync();
@@ -198,24 +198,24 @@ public class NettyHttpClient implements IHttpClient {
             request.headers().set(HttpHeaderNames.AUTHORIZATION, authCode);
             request.headers().set("Content-Type", "application/json;charset=utf-8");
             connect.awaitUninterruptibly();
-            log.info("Sending request. " + request);
-            log.info("Send body: " + body);
+            log.info("Sending request. {}", request);
+            log.info("Send body: {}", body);
             channel.writeAndFlush(request);
             latch.await();
             wrapper = initializer.getResponse();
             int status = wrapper.responseCode;
             String responseContent = wrapper.responseContent;
             if (status >= 200 && status < 300) {
-                log.debug("Succeed to get response OK - responseCode:" + status);
-                log.debug("Response Content - " + responseContent);
+                log.debug("Succeed to get response OK - responseCode: {}", status);
+                log.debug("Response Content - {}", responseContent);
 
             } else if (status >= 300 && status < 400) {
-                log.warn("Normal response but unexpected - responseCode:" + status
-                        + ", responseContent:" + responseContent);
+                log.warn("Normal response but unexpected - responseCode: {}, responseContent: {}",
+                        status, responseContent);
 
             } else {
-                log.warn("Got error response - responseCode:" + status + ", responseContent:"
-                        + responseContent);
+                log.warn("Got error response - responseCode: {}, responseContent: {}",
+                        status, responseContent);
 
                 switch (status) {
                     case 400:
@@ -287,8 +287,8 @@ public class NettyHttpClient implements IHttpClient {
         request.headers().set(HttpHeaderNames.HOST, uri.getHost());
         request.headers().set(HttpHeaderNames.AUTHORIZATION, authCode);
         request.headers().set("Content-Type", "application/json;charset=utf-8");
-        log.info("Sending request. " + request);
-        log.info("Send body: " + body);
+        log.info("Sending request. {}", request);
+        log.info("Send body: {}", body);
         channel.writeAndFlush(request);
     }
 
@@ -299,7 +299,7 @@ public class NettyHttpClient implements IHttpClient {
             channel = null;
             workerGroup = null;
         }
-        System.out.println("Finished request(s)");
+        log.info("Finished request(s)");
     }
 
     public interface BaseCallback {

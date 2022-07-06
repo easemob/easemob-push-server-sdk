@@ -1,6 +1,6 @@
-package com.easemob.push.common.resp;
+package com.easemob.push.common.response;
 
-import com.easemob.push.common.resp.ResponseWrapper.ErrorObject;
+import com.easemob.push.common.response.ResponseWrapper.ErrorObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

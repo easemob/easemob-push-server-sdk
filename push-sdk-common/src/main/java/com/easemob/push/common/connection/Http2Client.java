@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.easemob.push.common.ClientConfig;
-import com.easemob.push.common.resp.APIConnectionException;
-import com.easemob.push.common.resp.APIRequestException;
-import com.easemob.push.common.resp.ResponseWrapper;
+import com.easemob.push.common.response.APIConnectionException;
+import com.easemob.push.common.response.APIRequestException;
+import com.easemob.push.common.response.ResponseWrapper;
 import com.easemob.push.common.utils.StringUtils;
 
 import okhttp3.MediaType;
@@ -62,9 +62,9 @@ public class Http2Client implements IHttpClient {
     public ResponseWrapper sendGet(String url, String content)
             throws APIConnectionException, APIRequestException {
         ResponseWrapper wrapper = new ResponseWrapper();
-        log.debug("Send request - Get" + " " + url);
+        log.debug("Send request - Get  {}", url);
         if (null != content) {
-            log.debug("Request Content - " + content);
+            log.debug("Request Content - {}", content);
         }
 
         try {
@@ -101,28 +101,18 @@ public class Http2Client implements IHttpClient {
         if (response.isSuccessful()) {
             wrapper.responseCode = 200;
             wrapper.responseContent = response.body().string();
-            log.debug("Succeed to get response OK - response body: " + wrapper.responseContent);
-            //            InputStream in = response.body().byteStream();
-            //            StringBuffer sb = new StringBuffer();
-            //            if (null != in) {
-            //                InputStreamReader reader = new InputStreamReader(in, CHARSET);
-            //                char[] buff = new char[1024];
-            //                int len;
-            //                while ((len = reader.read(buff)) > 0) {
-            //                    sb.append(buff, 0, len);
-            //                }
-            //            }
+            log.debug("Succeed to get response OK - response body: {}", wrapper.responseContent);
         } else {
             int status = response.code();
             wrapper.responseCode = status;
             wrapper.responseContent = response.body().string();
             if (status >= 300 && status < 400) {
-                log.warn("Normal response but unexpected - responseCode:" + status
-                        + ", responseContent:" + wrapper.responseContent);
+                log.warn("Normal response but unexpected - responseCode: {}, responseContent: {}",
+                        status, wrapper.responseContent);
 
             } else {
-                log.warn("Got error response - responseCode:" + status + ", responseContent:"
-                        + wrapper.responseContent);
+                log.warn("Got error response - responseCode: {}, responseContent: {}",
+                        status, wrapper.responseContent);
 
                 switch (status) {
                     case 400:
@@ -163,7 +153,7 @@ public class Http2Client implements IHttpClient {
                         log.error("Unexpected response.");
                 }
             }
-            log.warn("Got error response - response: " + response.body().string());
+            log.warn("Got error response - response: {}", response.body().string());
             wrapper.setErrorObject();
         }
     }
@@ -172,7 +162,7 @@ public class Http2Client implements IHttpClient {
     public ResponseWrapper sendDelete(String url)
             throws APIConnectionException, APIRequestException {
         ResponseWrapper wrapper = new ResponseWrapper();
-        log.debug("Send request - Delete url:" + " " + url);
+        log.debug("Send request - Delete url: {}", url);
         Request request;
         try {
             Request.Builder requestBuilder = new Request.Builder().url(url)
@@ -200,7 +190,7 @@ public class Http2Client implements IHttpClient {
     public ResponseWrapper sendDelete(String url, String content)
             throws APIConnectionException, APIRequestException {
         ResponseWrapper wrapper = new ResponseWrapper();
-        log.debug("Send request - Delete url:" + " " + url + " content: " + content);
+        log.debug("Send request - Delete url: {}, content: {}", url, content);
         Request request;
         try {
             RequestBody body = RequestBody.create(JSON, content);
@@ -228,7 +218,7 @@ public class Http2Client implements IHttpClient {
     @Override
     public ResponseWrapper sendPost(String url, String content)
             throws APIConnectionException, APIRequestException {
-        log.debug("Send request - Post url:" + " " + url + " content: " + content);
+        log.debug("Send request - Post url: {}, content: {}", url, content);
         ResponseWrapper wrapper = new ResponseWrapper();
         try {
             RequestBody body = RequestBody.create(JSON, content);
@@ -256,7 +246,7 @@ public class Http2Client implements IHttpClient {
     @Override
     public ResponseWrapper sendPut(String url, String content)
             throws APIConnectionException, APIRequestException {
-        log.debug("Send request - Put url:" + " " + url + " content: " + content);
+        log.debug("Send request - Put url: {}, content: {}", url, content);
         ResponseWrapper wrapper = new ResponseWrapper();
         try {
             RequestBody body = RequestBody.create(JSON, content);

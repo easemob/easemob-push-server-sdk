@@ -1,4 +1,4 @@
-package com.easemob.push.common.resp;
+package com.easemob.push.common.response;
 
 import java.io.Serializable;
 
@@ -24,25 +24,29 @@ public class ResponseWrapper implements Serializable {
     public int responseCode = RESPONSE_CODE_NONE;
     public String responseContent;
 
-    public ErrorObject error;     // error for non-200 response, used by new API
+    /**
+     * error for non-200 response, used by new API
+     */
+    public ErrorObject error;
 
     public int rateLimitQuota;
     public int rateLimitRemaining;
     public int rateLimitReset;
 
     public void setRateLimit(String quota, String remaining, String reset) {
-        if (null == quota)
+        if (null == quota) {
             return;
+        }
 
         try {
             rateLimitQuota = Integer.parseInt(quota);
             rateLimitRemaining = Integer.parseInt(remaining);
             rateLimitReset = Integer.parseInt(reset);
 
-            log.debug("EPush API Rate Limiting params - quota:" + quota + ", remaining:" + remaining
-                    + ", reset:" + reset);
+            log.debug("EPush API Rate Limiting params - quota: {} ,remaining: {} ,reset: {}", quota,
+                    remaining, reset);
         } catch (NumberFormatException e) {
-            log.debug("Unexpected - parse rate limiting headers error.");
+            log.debug("Unexpected - parse rate limiting headers error.", e);
         }
     }
 
@@ -81,17 +85,19 @@ public class ResponseWrapper implements Serializable {
                 }
             }
         } catch (JsonSyntaxException e) {
-            log.error("Unexpected - responseContent:" + responseContent, e);
+            log.error("Unexpected - responseContent: {}", responseContent, e);
         } catch (Exception e) {
-            log.error("Unexpected - responseContent:" + responseContent, e);
+            log.error("Unexpected - responseContent: {}", responseContent, e);
         }
     }
 
     public boolean isServerResponse() {
-        if (responseCode / 100 == 2)
+        if (responseCode / 100 == 2) {
             return true;
-        if (responseCode > 0 && null != error && error.error.code > 0)
+        }
+        if (responseCode > 0 && null != error && error.error.code > 0) {
             return true;
+        }
         return false;
     }
 
