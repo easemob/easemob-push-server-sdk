@@ -1,0 +1,16 @@
+### MACOS ###
+.DS_Store
+
+### JAVA CLASS ###
+target
+/push-sdk-core/src/test/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### MAVEN ###
+*reduced-pom.xml
+
