@@ -3,7 +3,7 @@
 
 ### JAVA CLASS ###
 target
-/push-sdk-core/src/test/
+/push-sdk-api/src/test/
 
 ### IntelliJ IDEA ###
 .idea
