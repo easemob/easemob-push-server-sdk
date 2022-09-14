@@ -1,0 +1,15 @@
+### MACOS ###
+.DS_Store
+
+### JAVA CLASS ###
+target
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### MAVEN ###
+*reduced-pom.xml
+
