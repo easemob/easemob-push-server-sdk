@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>push-sdk-api</artifactId>
+    <version>0.1.2.RC4</version>
+    <description>Easemob PUSH SDK Reactor Api</description>
+    <parent>
+        <groupId>com.easemob.im</groupId>
+        <artifactId>push-sdk-parent</artifactId>
+        <version>0.1.2.RC4</version>
+    </parent>
+
+    <properties>
+        <reactor.version>2020.0.4</reactor.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.easemob.im</groupId>
+            <artifactId>push-sdk-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+    </dependencies>
+</project>
