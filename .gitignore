@@ -3,6 +3,8 @@
 
 ### JAVA CLASS ###
 target
+push-sdk-api/src/test
+push-sdk-reactor-api/src/test
 
 ### IntelliJ IDEA ###
 .idea
