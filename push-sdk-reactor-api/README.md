@@ -4,8 +4,10 @@
 
 ## 依赖
 
-如果你的项目使用 Maven 构建，在 pom.xml 中添加下面代码即可：
+### Maven 
 
+如果你的项目使用 Maven 构建，在 pom.xml 中添加下面代码即可：
+[版本链接](https://search.maven.org/search?q=g:com.easemob.im%20AND%20a:push-sdk-reactor-api)
 ``` xml
 <dependency>
     <groupId>com.easemob.im</groupId>
@@ -14,13 +16,15 @@
 </dependency>
 ```
 
+### Gradle
+
 如果你的项目使用 Gradle 构建，可以在 build.grade 中添加下面代码：
 
 ``` gradle
 implementation 'com.easemob.im:push-sdk-reactor-api:${version}'
 ```
 
-## 使用 
+## 使用
 
 #### 1、初始化EmPushService
 
