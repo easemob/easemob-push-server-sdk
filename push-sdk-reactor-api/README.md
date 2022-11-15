@@ -45,17 +45,24 @@ implementation 'com.easemob.im:push-sdk-reactor-api:${version}'
 ``` java
 
         //推送特性配置内容，详见：https://docs-im.easemob.com/push/apppush/pushkv
-        HashMap<String, Object> pushMesssage = new HashMap<String, Object>() {
-            {
-                put("title", "环信");
-                put("content", "欢迎使用环信推送服务");
-            }
-        };
+        PushMessage pushMessage = PushMessage.builder()
+                .title("环信")
+                .content("欢迎使用环信推送服务")
+                .config(Config.builder()
+                        .clickAction(
+                                ClickAction.builder().url("https://www.easemob.com").build()
+                        )
+                        .badge(
+                                Badge.builder().addNum(1).activity("com.xxx.activity").build()
+                        )
+                        .build()
+                )
+                .build();
         
         EMPushHttpResponse eMPushHttpResponse = emPushService.push().single(
                 PushRequest.builder()
                         .setTargets(Collections.singletonList("username"))
-                        .setPushMessage(pushMesssage)
+                        .setPushMessage(pushMessage)
                         .build()
         ).block;       
 ```
