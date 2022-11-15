@@ -11,10 +11,10 @@ public class PushRequest {
     private final List<String> targets;
     private final int strategy;
     private final String startDate;
-    private final Map<String, Object> pushMessage;
+    private final PushMessage pushMessage;
 
     public PushRequest(boolean async, List<String> targets, int strategy, String startDate,
-            Map<String, Object> pushMessage) {
+            PushMessage pushMessage) {
         this.async = async;
         this.targets = targets;
         this.strategy = strategy;
@@ -42,7 +42,7 @@ public class PushRequest {
         return startDate;
     }
 
-    public Map<String, Object> getPushMessage() {
+    public PushMessage getPushMessage() {
         return pushMessage;
     }
 
@@ -67,7 +67,7 @@ public class PushRequest {
         /**
          * 推送配置
          */
-        private Map<String, Object> pushMessage;
+        private PushMessage pushMessage;
 
         public Builder setAsync(boolean async) {
             this.async = async;
@@ -89,7 +89,7 @@ public class PushRequest {
             return this;
         }
 
-        public Builder setPushMessage(Map<String, Object> pushMessage) {
+        public Builder setPushMessage(PushMessage pushMessage) {
             this.pushMessage = pushMessage;
             return this;
         }
@@ -98,7 +98,7 @@ public class PushRequest {
             if (targets == null || targets.isEmpty()) {
                 throw new EMException("targets can not null or empty");
             }
-            if (pushMessage == null || pushMessage.isEmpty()) {
+            if (pushMessage == null) {
                 throw new EMException("pushMessage can not null or empty");
             }
             if (!async && targets.size() > 1) {
