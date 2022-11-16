@@ -1,5 +1,17 @@
+com.easemob.common
+com.easemob.common.exception
+com.easemob.common.model
+com.easemob.common.util
+com.easemob.http
+com.easemob.http.client
 com.easemob.push
 com.easemob.push.api
+com.easemob.push.model
 com.easemob.push.service
 com.easemob.push.service.impl
 com.easemob.push.utils
+com.easemob.reactor.push
+com.easemob.reactor.push.api
+com.easemob.reactor.push.service
+com.easemob.reactor.push.service.impl
+com.easemob.reactor.push.utils
