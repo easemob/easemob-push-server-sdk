@@ -1,7 +1,7 @@
-package com.easemob.push;
+package com.easemob.reactor.push;
 
-import com.easemob.push.api.LabelApi;
-import com.easemob.push.api.PushApi;
+import com.easemob.reactor.push.api.LabelApi;
+import com.easemob.reactor.push.api.PushApi;
 
 public class EMPushService {
 

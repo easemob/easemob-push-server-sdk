@@ -1,13 +1,13 @@
-package com.easemob.push.service.impl;
+package com.easemob.reactor.push.service.impl;
 
 import com.easemob.common.Constant;
 import com.easemob.common.exception.EMException;
 import com.easemob.common.model.DnsConfigResponse;
 import com.easemob.common.model.Endpoint;
-import com.easemob.push.EMPushProperties;
+import com.easemob.reactor.push.EMPushProperties;
 import com.easemob.push.service.DomainProvider;
 import com.easemob.push.utils.ByteBufUtil;
-import com.easemob.push.utils.EMPushHttpClientFactory;
+import com.easemob.reactor.push.utils.EMPushHttpClientFactory;
 import com.easemob.push.utils.HttpResponseChecker;
 import io.netty.handler.codec.http.QueryStringEncoder;
 import reactor.core.publisher.Mono;
