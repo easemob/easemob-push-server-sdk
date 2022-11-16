@@ -46,7 +46,7 @@ public class HttpRequest {
     /**
      * http协议格式化的请求字符串
      *
-     * @return
+     * @return http协议格式化
      */
     public String prettyString() {
         StringBuilder stringBuilder = new StringBuilder();

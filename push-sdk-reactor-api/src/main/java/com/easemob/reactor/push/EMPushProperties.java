@@ -1,8 +1,9 @@
-package com.easemob.push;
+package com.easemob.reactor.push;
 
 import com.easemob.common.exception.EMInvalidArgumentException;
 import com.easemob.common.model.Credentials;
 import com.easemob.common.model.Endpoint;
+import com.easemob.reactor.push.EMPushProxy;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;

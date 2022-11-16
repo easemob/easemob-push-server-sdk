@@ -1,7 +1,7 @@
-package com.easemob.push.api;
+package com.easemob.reactor.push.api;
 
 import com.easemob.common.Constant;
-import com.easemob.push.EMPushContext;
+import com.easemob.reactor.push.EMPushContext;
 import com.easemob.push.model.EMPushHttpResponse;
 import com.easemob.push.model.PushRequest;
 import com.easemob.push.utils.ByteBufUtil;
