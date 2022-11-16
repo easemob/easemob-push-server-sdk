@@ -1,7 +1,7 @@
 package com.easemob.reactor.push;
 
-import com.easemob.push.service.DomainProvider;
-import com.easemob.push.service.TokenProvider;
+import com.easemob.reactor.push.service.DomainProvider;
+import com.easemob.reactor.push.service.TokenProvider;
 import com.easemob.reactor.push.service.impl.EMDomainProvider;
 import com.easemob.reactor.push.service.impl.EMTokenProvider;
 import com.easemob.reactor.push.utils.EMPushHttpClientFactory;

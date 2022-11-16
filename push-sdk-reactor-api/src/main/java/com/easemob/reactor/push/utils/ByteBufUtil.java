@@ -1,4 +1,4 @@
-package com.easemob.push.utils;
+package com.easemob.reactor.push.utils;
 
 import com.easemob.common.util.BytesUtil;
 import io.netty.buffer.ByteBuf;
