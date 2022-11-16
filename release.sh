@@ -14,7 +14,7 @@ function release() {
   git commit --message "Snapshot for $SNAPSHOT"
 
   git push git@github.com:easemob/easemob-push-server-sdk.git master
-  git push git@github.com:easemob/easemob-push-server-sdk.git --tags
+  git push git@github.com:easemob/easemob-push-server-sdk.git v$RELEASE
 }
 
 echo "Release Version: "
