@@ -6,7 +6,7 @@
 
     <groupId>com.easemob.im</groupId>
     <artifactId>push-sdk-parent</artifactId>
-    <version>0.1.2.RC9-SNAPSHOT</version>
+    <version>0.1.2.Final</version>
     <packaging>pom</packaging>
 
     <name>Easemob PUSH SDK for Java</name>

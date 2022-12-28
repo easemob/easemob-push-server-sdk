@@ -5,7 +5,7 @@
     <parent>
         <artifactId>push-sdk-parent</artifactId>
         <groupId>com.easemob.im</groupId>
-        <version>0.1.2.RC9-SNAPSHOT</version>
+        <version>0.1.2.Final</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
