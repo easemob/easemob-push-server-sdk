@@ -10,6 +10,7 @@ public final class Constant {
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
 
+    public static final String SYNC_PUSH_URI = "/push/sync";
     public static final String SINGLE_PUSH_URI = "/push/single";
     public static final String LIST_PUSH_URI = "/push/list";
     public static final String LABEL_PUSH_URI = "/push/list/label";

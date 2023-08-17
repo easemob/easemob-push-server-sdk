@@ -7,6 +7,8 @@ import com.easemob.http.Method;
 import com.easemob.push.EMPushContext;
 import com.easemob.push.model.EMPushHttpResponse;
 import com.easemob.push.model.PushRequest;
+import com.easemob.push.model.SinglePushRequest;
+import com.easemob.push.model.SyncPushRequest;
 
 import static com.easemob.common.Constant.*;
 
@@ -19,12 +21,31 @@ public class PushApi {
     }
 
     /**
+     * 同步推送，返回推送结果
+     *
+     * @param pushRequest
+     * @param target
+     * @return
+     */
+    public EMPushHttpResponse sync(SyncPushRequest pushRequest, String target) {
+
+        return this.context.getHttpClient()
+                .execute(HttpRequest.Builder()
+                        .url(this.context.getBaseUrl() + SYNC_PUSH_URI + "/" + target)
+                        .method(Method.POST)
+                        .header(Constant.CONTENT_TYPE, Constant.APPLICATION_JSON)
+                        .body(BytesUtil.encode(pushRequest))
+                        .build()
+                );
+    }
+
+    /**
      * 列表推送，不创建任务
      *
      * @param pushRequest 推送请求体
      * @return EMPushHttpResponse
      */
-    public EMPushHttpResponse single(PushRequest pushRequest) {
+    public EMPushHttpResponse single(SinglePushRequest pushRequest) {
 
         return this.context.getHttpClient()
                 .execute(HttpRequest.Builder()

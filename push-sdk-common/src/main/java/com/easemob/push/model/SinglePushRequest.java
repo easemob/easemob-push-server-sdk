@@ -4,18 +4,15 @@ import com.easemob.common.exception.EMException;
 
 import java.util.List;
 
-public class PushRequest {
+public class SinglePushRequest {
 
     private final List<String> targets;
     private final int strategy;
-    private final String startDate;
     private final PushMessage pushMessage;
 
-    public PushRequest(List<String> targets, int strategy, String startDate,
-            PushMessage pushMessage) {
+    public SinglePushRequest(List<String> targets, int strategy, PushMessage pushMessage) {
         this.targets = targets;
         this.strategy = strategy;
-        this.startDate = startDate;
         this.pushMessage = pushMessage;
     }
 
@@ -29,10 +26,6 @@ public class PushRequest {
 
     public int getStrategy() {
         return strategy;
-    }
-
-    public String getStartDate() {
-        return startDate;
     }
 
     public PushMessage getPushMessage() {
@@ -49,17 +42,9 @@ public class PushRequest {
          */
         private PushStrategy strategy = PushStrategy.VENDOR_CHANNEL;
         /**
-         * 开始时间，定时任务
-         */
-        private String startDate;
-        /**
          * 推送配置
          */
         private PushMessage pushMessage;
-
-        public Builder setAsync(boolean async) {
-            return this;
-        }
 
         public Builder setTargets(List<String> targets) {
             this.targets = targets;
@@ -71,24 +56,19 @@ public class PushRequest {
             return this;
         }
 
-        public Builder setStartDate(String startDate) {
-            this.startDate = startDate;
-            return this;
-        }
-
         public Builder setPushMessage(PushMessage pushMessage) {
             this.pushMessage = pushMessage;
             return this;
         }
 
-        public PushRequest build() {
+        public SinglePushRequest build() {
             if (targets == null || targets.isEmpty()) {
                 throw new EMException("targets can not null or empty");
             }
             if (pushMessage == null) {
                 throw new EMException("pushMessage can not null or empty");
             }
-            return new PushRequest(targets, strategy.getValue(), startDate, pushMessage);
+            return new SinglePushRequest(targets, strategy.getValue(), pushMessage);
         }
     }
 }
