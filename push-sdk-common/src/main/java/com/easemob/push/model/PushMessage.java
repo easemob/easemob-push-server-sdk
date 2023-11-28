@@ -74,6 +74,11 @@ public class PushMessage {
      */
     private Map<String, Object> fcmV1;
 
+    /**
+     * honor 配置
+     */
+    private Map<String, Object> honor;
+
     public String getTitle() {
         return title;
     }
@@ -186,6 +191,14 @@ public class PushMessage {
         this.fcmV1 = fcmV1;
     }
 
+    public Map<String, Object> getHonor() {
+        return honor;
+    }
+
+    public void setHonor(Map<String, Object> honor) {
+        this.honor = honor;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -206,6 +219,7 @@ public class PushMessage {
         private Map<String, Object> meizu;
         private Map<String, Object> easemob;
         private Map<String, Object> fcmV1;
+        private Map<String, Object> honor;
 
         public PushMessage build() {
             PushMessage pushMessage = new PushMessage();
@@ -235,6 +249,7 @@ public class PushMessage {
             pushMessage.setMeizu(meizu);
             pushMessage.setEasemob(easemob);
             pushMessage.setFcmV1(fcmV1);
+            pushMessage.setHonor(honor);
             return pushMessage;
         }
 
@@ -308,5 +323,9 @@ public class PushMessage {
             return this;
         }
 
+        public Builder honor(Map<String, Object> honor) {
+            this.honor = honor;
+            return this;
+        }
     }
 }
