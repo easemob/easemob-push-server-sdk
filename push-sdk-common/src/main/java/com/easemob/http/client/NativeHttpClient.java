@@ -214,7 +214,7 @@ public class NativeHttpClient extends AbstractHttpExecuter {
         if (inputStream != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             byte[] bytes = new byte[1024];
-            for (int len = 0; (len = inputStream.read(bytes)) > 0; ) {
+            for (int len = 0; (len = inputStream.read(bytes)) != -1; ) {
                 byteArrayOutputStream.write(bytes, 0, len);
             }
             read = byteArrayOutputStream.toByteArray();
