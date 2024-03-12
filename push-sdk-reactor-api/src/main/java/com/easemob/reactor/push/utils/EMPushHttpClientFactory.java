@@ -26,7 +26,11 @@ public final class EMPushHttpClientFactory {
 
         ConnectionProvider connectionProvider = ConnectionProvider.builder(name)
                 .maxConnections(properties.getHttpConnectionPoolSize())
+                .maxLifeTime(Duration.ofMillis(properties.getHttpConnectionMaxLifeTime()))
                 .maxIdleTime(Duration.ofMillis(properties.getHttpConnectionMaxIdleTime()))
+                .evictInBackground(Duration.ofMillis(properties.getHttpConnectionEvictInBackground()))
+                .pendingAcquireMaxCount(properties.getHttpConnectionPendingAcquireMaxCount())
+                .pendingAcquireTimeout(Duration.ofMillis(properties.getHttpConnectionPendingAcquireTimeout()))
                 .build();
 
         HttpClient httpClient = HttpClient.create(connectionProvider)
