@@ -3,7 +3,6 @@ package com.easemob.reactor.push;
 import com.easemob.common.exception.EMInvalidArgumentException;
 import com.easemob.common.model.Credentials;
 import com.easemob.common.model.Endpoint;
-import com.easemob.reactor.push.EMPushProxy;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;
@@ -17,10 +16,17 @@ public class EMPushProperties {
     private final Long httpConnectionMaxIdleTime;
     private final Protocol protocol;
     private final Credentials credentials;
+    private final Integer httpConnectionPendingAcquireMaxCount;
+    private final Long httpConnectionPendingAcquireTimeout;
+    private final Long httpConnectionMaxLifeTime;
+    private final Long httpConnectionEvictInBackground;
 
     public EMPushProperties(List<Endpoint> hosts, EMPushProxy emProxy, String appKey,
             Integer httpConnectionPoolSize, Long httpConnectionMaxIdleTime,
-            Protocol protocol, Credentials credentials) {
+            Protocol protocol, Credentials credentials,
+            Integer httpConnectionPendingAcquireMaxCount,
+            Long httpConnectionPendingAcquireTimeout, Long httpConnectionMaxLifeTime,
+            Long httpConnectionEvictInBackground) {
         this.hosts = hosts;
         this.emProxy = emProxy;
         this.appKey = appKey;
@@ -28,6 +34,10 @@ public class EMPushProperties {
         this.httpConnectionMaxIdleTime = httpConnectionMaxIdleTime;
         this.protocol = protocol;
         this.credentials = credentials;
+        this.httpConnectionPendingAcquireMaxCount = httpConnectionPendingAcquireMaxCount;
+        this.httpConnectionPendingAcquireTimeout = httpConnectionPendingAcquireTimeout;
+        this.httpConnectionMaxLifeTime = httpConnectionMaxLifeTime;
+        this.httpConnectionEvictInBackground = httpConnectionEvictInBackground;
     }
 
     public static Builder builder() {
@@ -70,6 +80,21 @@ public class EMPushProperties {
         HTTP, HTTPS
     }
 
+    public Integer getHttpConnectionPendingAcquireMaxCount() {
+        return httpConnectionPendingAcquireMaxCount;
+    }
+
+    public Long getHttpConnectionPendingAcquireTimeout() {
+        return httpConnectionPendingAcquireTimeout;
+    }
+
+    public Long getHttpConnectionMaxLifeTime() {
+        return httpConnectionMaxLifeTime;
+    }
+
+    public Long getHttpConnectionEvictInBackground() {
+        return httpConnectionEvictInBackground;
+    }
 
     public static class Builder {
         private List<Endpoint> hosts;
@@ -79,6 +104,10 @@ public class EMPushProperties {
         private Long httpConnectionMaxIdleTime = 10 * 1000L;
         private Protocol protocol = Protocol.HTTP;
         private Credentials credentials;
+        private Integer httpConnectionPendingAcquireMaxCount = -1;
+        private Long httpConnectionPendingAcquireTimeout = 0L;
+        private Long httpConnectionMaxLifeTime = 3600 * 1000L;
+        private Long httpConnectionEvictInBackground = 60 * 1000L;
 
         public Builder setHosts(List<Endpoint> hosts) {
             this.hosts = hosts;
@@ -115,6 +144,28 @@ public class EMPushProperties {
             return this;
         }
 
+        public Builder setHttpConnectionPendingAcquireMaxCount(
+                Integer httpConnectionPendingAcquireMaxCount) {
+            this.httpConnectionPendingAcquireMaxCount = httpConnectionPendingAcquireMaxCount;
+            return this;
+        }
+
+        public Builder setHttpConnectionPendingAcquireTimeout(
+                Long httpConnectionPendingAcquireTimeout) {
+            this.httpConnectionPendingAcquireTimeout = httpConnectionPendingAcquireTimeout;
+            return this;
+        }
+
+        public Builder setHttpConnectionMaxLifeTime(Long httpConnectionMaxLifeTime) {
+            this.httpConnectionMaxLifeTime = httpConnectionMaxLifeTime;
+            return this;
+        }
+
+        public Builder setHttpConnectionEvictInBackground(Long httpConnectionEvictInBackground) {
+            this.httpConnectionEvictInBackground = httpConnectionEvictInBackground;
+            return this;
+        }
+
         public EMPushProperties build() {
             if (Strings.isBlank(appKey)) {
                 throw new EMInvalidArgumentException("appKey must not be null or blank");
@@ -124,7 +175,9 @@ public class EMPushProperties {
             }
             return new EMPushProperties(this.hosts, this.emProxy, this.appKey,
                     this.httpConnectionPoolSize, this.httpConnectionMaxIdleTime, this.protocol,
-                    this.credentials);
+                    this.credentials, this.httpConnectionPendingAcquireMaxCount,
+                    this.httpConnectionPendingAcquireTimeout, this.httpConnectionMaxLifeTime,
+                    this.httpConnectionEvictInBackground);
         }
     }
 }
