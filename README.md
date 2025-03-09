@@ -55,7 +55,7 @@ implementation 'com.easemob.im:push-sdk-api:${version}'
             .setAppKey("appkey")
             .build();
 
-        EMPushService emPushService=new EMPushService(emPushProperties); 
+        EMPushService emPushService = new EMPushService(emPushProperties); 
 ```
 
 ### 2、API 调用
@@ -76,11 +76,12 @@ implementation 'com.easemob.im:push-sdk-api:${version}'
                         .build()
                 )
                 .build();
-        
-        EMPushHttpResponse eMPushHttpResponse = emPushService.push().single(
-                PushRequest.builder()
-                        .setTargets(Collections.singletonList("username"))
-                        .setPushMessage(pushMessage)
-                        .build()
-        );       
+                
+        SyncPushRequest syncPushRequest = SyncPushRequest.builder()
+                .setPushMessage(pushMessage)
+                .setStrategy(PushStrategy.EASEMOB_CHANNEL)
+                .build();
+
+        EMPushHttpResponse single = emPushService.push().sync(syncPushRequest, "username");
+        //  TODO 处理请求结果     
 ```
