@@ -79,6 +79,11 @@ public class PushMessage {
      */
     private Map<String, Object> honor;
 
+    /**
+     * harmonyOS 配置
+     */
+    private Map<String, Object> harmonyOS;
+
     public String getTitle() {
         return title;
     }
@@ -199,6 +204,14 @@ public class PushMessage {
         this.honor = honor;
     }
 
+    public Map<String, Object> getHarmonyOS() {
+        return harmonyOS;
+    }
+
+    public void setHarmonyOS(Map<String, Object> harmonyOS) {
+        this.harmonyOS = harmonyOS;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -220,6 +233,7 @@ public class PushMessage {
         private Map<String, Object> easemob;
         private Map<String, Object> fcmV1;
         private Map<String, Object> honor;
+        private Map<String, Object> harmonyOS;
 
         public PushMessage build() {
             PushMessage pushMessage = new PushMessage();
@@ -250,6 +264,7 @@ public class PushMessage {
             pushMessage.setEasemob(easemob);
             pushMessage.setFcmV1(fcmV1);
             pushMessage.setHonor(honor);
+            pushMessage.setHarmonyOS(harmonyOS);
             return pushMessage;
         }
 
@@ -325,6 +340,11 @@ public class PushMessage {
 
         public Builder honor(Map<String, Object> honor) {
             this.honor = honor;
+            return this;
+        }
+
+        public Builder harmonyOS(Map<String, Object> harmonyOS) {
+            this.harmonyOS = harmonyOS;
             return this;
         }
     }
